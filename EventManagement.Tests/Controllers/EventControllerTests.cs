@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
+using static EventManagement.Controllers.EventController;
 
 namespace EventManagement.Tests
 {
@@ -70,6 +71,27 @@ namespace EventManagement.Tests
             Assert.Equal(eventName, createdEvent.EventName);
         }
 
+        
+        [Fact]
+        public void CreateEvent_ShouldAssignDefaultStartAndEndDateTime_WhenBothAreNull()
+        {
+            // Arrange
+            string eventName = "Event With Default Dates";
+            DateTime? startDateTime = null; // Passing null for both startDateTime and endDateTime
+            DateTime? endDateTime = null;
+
+            // Act
+            var result = _controller.CreateEvent(eventName, startDateTime, endDateTime);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var createdEvent = Assert.IsType<Event>(okResult.Value);
+            Assert.Equal(eventName, createdEvent.EventName);
+            Assert.Equal(DateTime.Now.Date, createdEvent.StartDateTime.Date); // Verifying default value for startDateTime
+            Assert.Equal(DateTime.Now.AddDays(1).Date, createdEvent.EndDateTime.Date); // Verifying default value for endDateTime
+        }
+
+
         [Fact]
         public void CreateEvent_ShouldReturnBadRequest_WhenEndDateIsBeforeStartDate()
         {
@@ -103,6 +125,63 @@ namespace EventManagement.Tests
         }
 
         [Fact]
+        public void EventAttendee_ShouldHaveCorrectUserAndEvent_WhenInitialized()
+        {
+            // Arrange
+            var user = new User { UserId = 1, UserName = "Lokesh" };
+            var eventEntity = new Event { EventId = 1, EventName = "Sample Event 1", StartDateTime = DateTime.Now.AddDays(1), EndDateTime = DateTime.Now.AddDays(2) };
+            var eventAttendee = new EventAttendee { UserId = user.UserId, User = user, EventId = eventEntity.EventId, Event = eventEntity };
+
+            // Act
+            var actualUser = eventAttendee.User;
+            var actualEvent = eventAttendee.Event;
+
+            // Assert
+            Assert.NotNull(actualUser);
+            Assert.Equal(user.UserId, actualUser.UserId);
+            Assert.Equal(user.UserName, actualUser.UserName);
+
+            Assert.NotNull(actualEvent);
+            Assert.Equal(eventEntity.EventId, actualEvent.EventId);
+            Assert.Equal(eventEntity.EventName, actualEvent.EventName);
+        }
+
+        [Fact]
+        public void CreateEvent_ShouldReturnInternalServerError_WhenExceptionIsThrown()
+        {
+            // Arrange
+            string eventName = "Event causing exception";
+            DateTime startDateTime = DateTime.Now.AddDays(5);
+            DateTime endDateTime = DateTime.Now.AddDays(6);
+
+            // Set up the in-memory database with an exception-throwing context
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .Options;
+
+            var mockLogger = new Mock<ILogger<EventController>>();
+
+            // Use a real ApplicationDbContext with an in-memory database
+            var context = new ApplicationDbContext(options);
+
+            // Mocking SaveChanges to throw an exception
+            var mockContext = new Mock<ApplicationDbContext>(options);
+            mockContext.Setup(c => c.SaveChanges()).Throws(new Exception("Test exception"));
+
+            // Create the controller with the mocked context
+            var controller = new EventController(mockContext.Object, mockLogger.Object);
+
+            // Act
+            var result = controller.CreateEvent(eventName, startDateTime, endDateTime);
+
+            // Assert
+            var statusCodeResult = Assert.IsType<ObjectResult>(result);
+            Assert.Equal(500, statusCodeResult.StatusCode);
+            Assert.Equal("An error occurred while creating the event.", statusCodeResult.Value);
+        }
+
+
+        [Fact]
         public void GetEvents_ShouldReturnUpcomingEventsByDefault()
         {
             // Act
@@ -112,6 +191,40 @@ namespace EventManagement.Tests
             var okResult = Assert.IsType<OkObjectResult>(result);
             var events = Assert.IsType<List<Event>>(okResult.Value);
             Assert.True(events.All(e => e.StartDateTime >= DateTime.Now));
+        }
+
+        [Fact]
+        public void GetEvents_ShouldReturnPastEvents_WhenFilterIsPast()
+        {
+            // Arrange
+            var filter = EventFilter.past;
+
+            // Act
+            var result = _controller.GetEvents(filter);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var events = Assert.IsType<List<Event>>(okResult.Value);
+
+            // Verify that all returned events have ended before the current date
+            Assert.All(events, e => Assert.True(e.EndDateTime < DateTime.Now));
+        }
+
+        [Fact]
+        public void GetEvents_ShouldReturnAllEvents_WhenFilterIsAll()
+        {
+            // Arrange
+            var filter = EventFilter.all;
+
+            // Act
+            var result = _controller.GetEvents(filter);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var events = Assert.IsType<List<Event>>(okResult.Value);
+
+            // Verify that all events are returned
+            Assert.Equal(_context.Events.Count(), events.Count);
         }
 
         [Fact]
