@@ -222,13 +222,13 @@ var assemblies = [
     "name": "EventManagement",
     "classes": [
       { "name": "EventManagement.Controllers.EventController", "rp": "EventManagement_EventController.html", "cl": 114, "ucl": 0, "cal": 114, "tl": 198, "cb": 23, "tb": 24, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "EventManagement.Controllers.WeatherForecastController", "rp": "EventManagement_WeatherForecastController.html", "cl": 0, "ucl": 17, "cal": 17, "tl": 33, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "EventManagement.Controllers.WeatherForecastController", "rp": "EventManagement_WeatherForecastController.html", "cl": 17, "ucl": 0, "cal": 17, "tl": 33, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
       { "name": "EventManagement.Data.ApplicationDbContext", "rp": "EventManagement_ApplicationDbContext.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 24, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
       { "name": "EventManagement.Models.Event", "rp": "EventManagement_Event.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 11, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
       { "name": "EventManagement.Models.EventAttendee", "rp": "EventManagement_EventAttendee.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 11, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
       { "name": "EventManagement.Models.User", "rp": "EventManagement_User.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "EventManagement.WeatherForecast", "rp": "EventManagement_WeatherForecast.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 13, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "Program", "rp": "EventManagement_Program.html", "cl": 0, "ucl": 27, "cal": 27, "tl": 53, "cb": 0, "tb": 2, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "EventManagement.WeatherForecast", "rp": "EventManagement_WeatherForecast.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 13, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Program", "rp": "EventManagement_Program.html", "cl": 21, "ucl": 6, "cal": 27, "tl": 53, "cb": 2, "tb": 2, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
     ]},
 ];
 

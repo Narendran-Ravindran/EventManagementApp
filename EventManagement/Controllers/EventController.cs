@@ -21,6 +21,7 @@ namespace EventManagement.Controllers
         }
 
         // API to create events
+        
         [HttpPost("create-event")]
         public IActionResult CreateEvent([Required] string eventName, DateTime? startDateTime = null, DateTime? endDateTime = null)
         {
